@@ -526,9 +526,11 @@ Qt::ItemFlags MemWatchModel::flags(const QModelIndex& index) const
   }
   else if (index.column() == WATCH_COL_VALUE)
   {
+    const bool container{node->getEntry() != nullptr &&
+                         GUICommon::isContainerType(node->getEntry()->getType())};
     const bool hooked{DolphinComm::DolphinAccessor::getStatus() ==
                       DolphinComm::DolphinAccessor::DolphinStatus::hooked};
-    const Qt::ItemFlag itemIsEditable{hooked ? Qt::ItemIsEditable : Qt::NoItemFlags};
+    const Qt::ItemFlag itemIsEditable{hooked && !container ? Qt::ItemIsEditable : Qt::NoItemFlags};
     flags |= itemIsEditable;
   }
 
