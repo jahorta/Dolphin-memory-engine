@@ -137,18 +137,18 @@ void StructEditorWidget::initialiseWidgets()
           &StructEditorWidget::onUnloadStruct);
   m_btnUnloadStructDetails->setToolTip("Close struct.");
   m_btnUnloadStructDetails->setDisabled(true);
-  m_btnUnloadStructDetails->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+  m_btnUnloadStructDetails->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 
   m_btnSaveStructDetails = new QPushButton(tr("Save"), this);
   connect(m_btnSaveStructDetails, &QPushButton::clicked, this, &StructEditorWidget::onSaveStruct);
   m_btnSaveStructDetails->setToolTip("Save struct details.");
   m_btnSaveStructDetails->setDisabled(true);
-  m_btnSaveStructDetails->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+  m_btnSaveStructDetails->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 
   m_btnAddField = new QPushButton(tr("Add"), this);
   m_btnAddField->setToolTip("Add field and update struct length.");
   m_btnAddField->setDisabled(true);
-  m_btnAddField->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+  m_btnAddField->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 
   QMenu* menu = new QMenu(this);
   menu->addAction("Field", this, &StructEditorWidget::onAddField);
@@ -159,13 +159,13 @@ void StructEditorWidget::initialiseWidgets()
   connect(m_btnDeleteFields, &QPushButton::clicked, this, &StructEditorWidget::onDeleteFields);
   m_btnDeleteFields->setToolTip("Delete fields and update struct length.");
   m_btnDeleteFields->setDisabled(true);
-  m_btnDeleteFields->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+  m_btnDeleteFields->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 
   m_btnClearFields = new QPushButton(tr("Clear"), this);
   connect(m_btnClearFields, &QPushButton::clicked, this, &StructEditorWidget::onClearFields);
   m_btnClearFields->setToolTip("Clear fields and replace with padding.");
   m_btnClearFields->setDisabled(true);
-  m_btnClearFields->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+  m_btnClearFields->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 
   m_txtStructName = new QLineEdit(this);
   connect(m_txtStructName, &QLineEdit::editingFinished, this,
@@ -202,32 +202,17 @@ void StructEditorWidget::makeLayouts()
   m_structSelectView->setSizePolicy(selectTreePolicy);
   structSelectPanelLayout->addWidget(m_structSelectView);
   structSelectPanelLayout->addWidget(structDefButtons);
-  structSelectPanelLayout->setContentsMargins(0, 0, 0, 0);
+  structSelectPanelLayout->setContentsMargins(3, 3, 0, 3);
   structSelectPanel->setLayout(structSelectPanelLayout);
 
-  QWidget* structDetailStructButtons = new QWidget;
-  QHBoxLayout* structDetailStructButtonLayout = new QHBoxLayout;
-
-  structDetailStructButtonLayout->addWidget(m_btnUnloadStructDetails);
-  structDetailStructButtonLayout->addWidget(m_btnSaveStructDetails);
-  structDetailStructButtons->setLayout(structDetailStructButtonLayout);
-
-  QWidget* structDetailFieldButtons = new QWidget;
-  QHBoxLayout* structDetailFieldButtonLayout = new QHBoxLayout;
-
-  structDetailFieldButtonLayout->addWidget(m_btnAddField);
-  structDetailFieldButtonLayout->addWidget(m_btnDeleteFields);
-  structDetailFieldButtonLayout->addWidget(m_btnClearFields);
-  structDetailFieldButtons->setLayout(structDetailFieldButtonLayout);
-
-  QWidget* structDetailButtons = new QWidget;
   QHBoxLayout* structDetailButtonLayout = new QHBoxLayout;
-
-  structDetailButtonLayout->addWidget(structDetailStructButtons);
+  structDetailButtonLayout->addWidget(m_btnUnloadStructDetails);
+  structDetailButtonLayout->addWidget(m_btnSaveStructDetails);
   structDetailButtonLayout->addStretch();
-  structDetailButtonLayout->addWidget(structDetailFieldButtons);
+  structDetailButtonLayout->addWidget(m_btnAddField);
+  structDetailButtonLayout->addWidget(m_btnDeleteFields);
+  structDetailButtonLayout->addWidget(m_btnClearFields);
   structDetailButtonLayout->setContentsMargins(0, 0, 0, 0);
-  structDetailButtons->setLayout(structDetailButtonLayout);
 
   QFormLayout* structDetails = new QFormLayout;
   structDetails->addRow("Struct Name:", m_txtStructName);
@@ -236,10 +221,10 @@ void StructEditorWidget::makeLayouts()
   QWidget* structEditPanel = new QWidget;
   QVBoxLayout* structEditPanelLayout = new QVBoxLayout;
 
-  structEditPanelLayout->addWidget(structDetailButtons);
+  structEditPanelLayout->addLayout(structDetailButtonLayout);
   structEditPanelLayout->addWidget(m_structDetailView);
   structEditPanelLayout->addLayout(structDetails);
-  structEditPanelLayout->setContentsMargins(0, 0, 0, 0);
+  structEditPanelLayout->setContentsMargins(0, 3, 3, 3);
   structEditPanel->setLayout(structEditPanelLayout);
 
   QHBoxLayout* widgetLayout = new QHBoxLayout;
@@ -1028,7 +1013,7 @@ void StructEditorWidget::readStructDefMapFromJson(const QJsonObject& json,
           i++;
           newPartialName = oldPartialName + QString("(%1)").arg(i);
         }
-        QString newName = nodeParent->getNameSpace() + "::" + newPartialName;
+        QString newName = (nodeParent->getNameSpace().isEmpty()? "" : "::") + newPartialName;
 
         QString msg = QString("There is already a group with the same name as the struct on file: "
                               "%1.\nHow would you like to resolve this?")
@@ -1047,6 +1032,7 @@ void StructEditorWidget::readStructDefMapFromJson(const QJsonObject& json,
           QString msg = QString("Struct %1 renamed to %2").arg(structName).arg(newName);
           QMessageBox::warning(this, "Struct Renamed", msg);
           structName = newName;
+          def->setLabel(newName);
         }
         else if (msgBox.clickedButton() == changeGroup)
         {
@@ -1090,11 +1076,12 @@ void StructEditorWidget::readStructDefMapFromJson(const QJsonObject& json,
             i++;
             newPartialName = oldPartialName + QString("(%1)").arg(i);
           }
-          QString newName = nodeParent->getNameSpace() + "::" + newPartialName;
+          QString newName = (nodeParent->getNameSpace().isEmpty() ? "" : "::") + newPartialName;
           map.insert(structName, newName);
           QString msg = QString("%1 from file renamed to %2").arg(structName).arg(newName);
           QMessageBox::warning(this, "Struct Renamed", msg);
           structName = newName;
+          def->setLabel(newName);
         }
       }
     }
@@ -1112,6 +1099,7 @@ void StructEditorWidget::readStructDefMapFromJson(const QJsonObject& json,
     m_structSelectModel->insertNewDef(key, newStructDefs[key]);
     emit structAddedRemoved(key, newStructDefs[key]);
   }
+  emit m_structSelectModel->layoutChanged();
 }
 
 void StructEditorWidget::writeStructDefMapToJson(QJsonObject& json,

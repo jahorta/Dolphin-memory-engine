@@ -256,6 +256,7 @@ void MemWatchModel::deleteNode(const QModelIndex& index)
   if (index.isValid())
   {
     MemWatchTreeNode* toDelete = static_cast<MemWatchTreeNode*>(index.internalPointer());
+    removeNodeFromStructNodeMap(toDelete);
 
     int toDeleteRow = toDelete->getRow();
 
@@ -824,13 +825,27 @@ void MemWatchModel::addNodeToStructNodeMap(MemWatchTreeNode* node)
 
 void MemWatchModel::removeNodeFromStructNodeMap(MemWatchTreeNode* node)
 {
-  QString name = node->getEntry()->getStructName();
-  if (name.isEmpty() || m_structNodes.isEmpty() || !m_structNodes.contains(name) ||
-      m_structNodes[name].isEmpty() || !m_structNodes[name].contains(node))
-    return;
-  m_structNodes[name].remove(m_structNodes[name].indexOf(node));
-  if (m_structNodes[name].isEmpty())
-    m_structNodes.remove(name);
+  QList<MemWatchTreeNode*> queue{node};
+
+  while (queue.count() > 0)
+  {
+    MemWatchTreeNode* curNode = queue.takeFirst();
+    if (curNode->hasChildren())
+    {
+      queue.append(curNode->getChildren());
+    }
+
+    if (!curNode->isGroup() && curNode->getEntry() && curNode->getEntry()->getType() == Common::MemType::type_struct)
+    {
+      QString name = node->getEntry()->getStructName();
+      if (name.isEmpty() || m_structNodes.isEmpty() || !m_structNodes.contains(name) ||
+          m_structNodes[name].isEmpty() || !m_structNodes[name].contains(node))
+        return;
+      m_structNodes[name].remove(m_structNodes[name].indexOf(node));
+      if (m_structNodes[name].isEmpty())
+        m_structNodes.remove(name);
+    }
+  }
 }
 
 void MemWatchModel::setStructMap(QMap<QString, StructDef*> structDefMap)
