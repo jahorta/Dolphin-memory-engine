@@ -151,28 +151,21 @@ void StructDetailModel::addField(const QModelIndex& index, FieldDef* field)
 
 void StructDetailModel::addPaddingFields(int count, int start)
 {
-  u32 starting_offset;
 
   if (m_fields.isEmpty())
   {
     start = 0;
-    starting_offset = 0;
   }
   else if (start < 0 || start >= m_fields.count())
   {
     start = static_cast<int>(m_fields.count());
-    starting_offset = m_fields.last()->getOffset() + m_fields.last()->getFieldSize();
-  }
-  else
-  {
-    starting_offset = m_fields[start]->getOffset() + m_fields[start]->getFieldSize();
   }
 
   beginInsertRows(QModelIndex(), start, start + count - 1);
 
   for (int i = 0; i < count; ++i)
   {
-    m_fields.insert(start + i, new FieldDef(starting_offset + i, 1, true));
+    m_fields.insert(start + i, new FieldDef(0, 1, true));
   }
 
   endInsertRows();
