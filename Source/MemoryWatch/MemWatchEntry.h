@@ -50,6 +50,13 @@ public:
   QString getStructName() const;
   void setStructName(QString structName);
 
+  bool collectionElementIsPointer() const;
+  void setCollectionElementIsPointer(bool isPointer);
+  Common::MemType getContainerMemType() const;
+  void setContainerMemType(Common::MemType _type);
+  u32 getCollectionSize();
+  void setCollectionSize(u32 length);
+
   Common::MemOperationReturnCode freeze();
 
   u32 getAddressForPointerLevel(int level) const;
