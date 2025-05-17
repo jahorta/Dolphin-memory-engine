@@ -81,6 +81,7 @@ bool isContainerType(const Common::MemType type)
 {
   switch (type)
   {
+  case Common::MemType::type_array:
   case Common::MemType::type_struct:
     return true;
   default:
