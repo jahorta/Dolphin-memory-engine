@@ -85,5 +85,5 @@ private:
   u32 m_curActualAddress;
   Common::MemType m_collectionElementType = Common::MemType::type_none;
   bool m_collectionElementIsPointer = false;
-  u32 m_collectionLength = 0;
+  u32 m_collectionSize = 0;
 };
