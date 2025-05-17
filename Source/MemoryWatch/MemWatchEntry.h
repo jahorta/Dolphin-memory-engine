@@ -83,4 +83,7 @@ private:
   size_t m_length = 1;
   QString m_structName;
   u32 m_curActualAddress;
+  Common::MemType m_collectionElementType = Common::MemType::type_none;
+  bool m_collectionElementIsPointer = false;
+  u32 m_collectionLength = 0;
 };
