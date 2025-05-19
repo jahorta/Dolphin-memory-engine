@@ -50,10 +50,8 @@ public:
   QString getStructName() const;
   void setStructName(QString structName);
 
-  bool collectionElementIsPointer() const;
-  void setCollectionElementIsPointer(bool isPointer);
-  Common::MemType getContainerMemType() const;
-  void setContainerMemType(Common::MemType _type);
+  MemWatchEntry* getContainerEntry() const;
+  void setContainerEntry(MemWatchEntry* elementEntry);
   u32 getCollectionSize();
   void setCollectionSize(u32 length);
 
@@ -90,7 +88,7 @@ private:
   size_t m_length = 1;
   QString m_structName;
   u32 m_curActualAddress;
-  Common::MemType m_collectionElementType = Common::MemType::type_none;
+  MemWatchEntry* m_collectionEntry{};
   bool m_collectionElementIsPointer = false;
   u32 m_collectionSize = 0;
 };
