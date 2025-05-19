@@ -977,6 +977,27 @@ void MemWatchModel::expandStructNode(MemWatchTreeNode* node)
   addNodes(childNodes, getIndexFromTreeNode(node), true);
 }
 
+void MemWatchModel::expandArrayNode(MemWatchTreeNode* node)
+{
+  for (int i = 0; i < node->getEntry()->getCollectionCount(); i++)
+  {
+    MemWatchEntry* childEntry = new MemWatchEntry(node->getEntry()->getContainerEntry());
+    MemWatchTreeNode* child = new MemWatchTreeNode(childEntry, node);
+    node->appendChild(child);
+
+    if (child->getEntry()->getType() == Common::MemType::type_struct)
+      setupStructNode(child);
+    else if (child->getEntry()->getType() == Common::MemType::type_array)
+      setupArrayNode(child);
+  }
+}
+
+void MemWatchModel::collapseArrayNode(MemWatchTreeNode* node)
+{
+  while (node->hasChildren())
+    deleteNode(getIndexFromTreeNode(node->getChildren()[0]));
+}
+
 void MemWatchModel::collapseContainerNode(MemWatchTreeNode* node)
 {
   if (node->getEntry()->getType() == Common::MemType::type_struct)
@@ -1045,4 +1066,9 @@ void MemWatchModel::setupContainersRecursive(MemWatchTreeNode* node)
       if (child->getEntry()->getType() == Common::MemType::type_struct)
         setupStructNode(child);
   }
+
+void MemWatchModel::setupArrayNode(MemWatchTreeNode* node)
+{
+  addNodes({new MemWatchTreeNode(new MemWatchEntry(m_placeholderEntry))},
+            getIndexFromTreeNode(node), true);
 }
