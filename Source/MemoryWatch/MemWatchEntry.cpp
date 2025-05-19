@@ -201,6 +201,17 @@ void MemWatchEntry::setContainerEntry(MemWatchEntry* elementEntry)
 {
   m_collectionEntry = elementEntry;
 }
+
+u32 MemWatchEntry::getCollectionCount()
+{
+  return m_collectionCount;
+}
+
+void MemWatchEntry::setCollectionCount(u32 size)
+{
+  m_collectionCount = size;
+}
+
 void MemWatchEntry::addOffset(const int offset)
 {
   m_pointerOffsets.push_back(offset);
