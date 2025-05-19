@@ -192,6 +192,15 @@ void MemWatchEntry::setStructName(QString structName)
   m_structName = structName;
 }
 
+MemWatchEntry* MemWatchEntry::getContainerEntry() const
+{
+  return m_collectionEntry;
+}
+
+void MemWatchEntry::setContainerEntry(MemWatchEntry* elementEntry)
+{
+  m_collectionEntry = elementEntry;
+}
 void MemWatchEntry::addOffset(const int offset)
 {
   m_pointerOffsets.push_back(offset);
