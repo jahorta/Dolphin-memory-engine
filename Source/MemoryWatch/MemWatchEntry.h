@@ -52,8 +52,8 @@ public:
 
   MemWatchEntry* getContainerEntry() const;
   void setContainerEntry(MemWatchEntry* elementEntry);
-  u32 getCollectionSize();
-  void setCollectionSize(u32 length);
+  u32 getCollectionCount();
+  void setCollectionCount(u32 size);
 
   Common::MemOperationReturnCode freeze();
 
@@ -90,5 +90,5 @@ private:
   u32 m_curActualAddress;
   MemWatchEntry* m_collectionEntry{};
   bool m_collectionElementIsPointer = false;
-  u32 m_collectionSize = 0;
+  u32 m_collectionCount = 0;
 };
