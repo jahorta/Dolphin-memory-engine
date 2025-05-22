@@ -1001,6 +1001,8 @@ void MemWatchModel::expandArrayNode(MemWatchTreeNode* node)
     else if (child->getEntry()->getType() == Common::MemType::type_array)
       setupArrayNode(child);
   }
+
+  updateArrayAddresses(node);
 }
 
 void MemWatchModel::collapseArrayNode(MemWatchTreeNode* node)
@@ -1033,6 +1035,8 @@ void MemWatchModel::updateContainerAddresses(MemWatchTreeNode* node)
 {
   if (node->getEntry()->getType() == Common::MemType::type_struct)
     updateStructAddresses(node);
+  else if (node->getEntry()->getType() == Common::MemType::type_array)
+    updateArrayAddresses(node);
 }
 
 void MemWatchModel::updateStructAddresses(MemWatchTreeNode* node)
@@ -1063,6 +1067,26 @@ void MemWatchModel::updateStructAddresses(MemWatchTreeNode* node)
       if (GUICommon::isContainerType(children[i]->getEntry()->getType()))
         updateContainerAddresses(children[i]);
     }
+  }
+}
+
+void MemWatchModel::updateArrayAddresses(MemWatchTreeNode* node)
+{
+  if (!node->getEntry()->hasAddressChanged())
+    return;
+
+  u32 addr = node->getEntry()->getActualAddress();
+  node->getEntry()->updateActualAddress(addr);
+  QVector<MemWatchTreeNode*> children = node->getChildren();
+  u32 entrySize =
+      Common::getSizeForType(node->getEntry()->getType(), node->getEntry()->getLength());
+
+
+  for (int i = 0; i < children.count(); i++)
+  {
+    children[i]->getEntry()->setConsoleAddress(addr + (entrySize * i));
+    if (GUICommon::isContainerType(children[i]->getEntry()->getType()))
+      updateContainerAddresses(children[i]);
   }
 }
 

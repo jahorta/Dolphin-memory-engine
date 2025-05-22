@@ -103,6 +103,7 @@ private:
 
   void updateContainerAddresses(MemWatchTreeNode* node);
   void updateStructAddresses(MemWatchTreeNode* node);
+  void updateArrayAddresses(MemWatchTreeNode* node);
   void setupStructNode(MemWatchTreeNode* node);
   void addNodeToStructNodeMap(MemWatchTreeNode* node);
   void removeNodeFromStructNodeMap(MemWatchTreeNode* node);
