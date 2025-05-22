@@ -89,6 +89,5 @@ private:
   QString m_structName;
   u32 m_curActualAddress;
   MemWatchEntry* m_collectionEntry{};
-  bool m_collectionElementIsPointer = false;
   u32 m_collectionCount = 0;
 };
