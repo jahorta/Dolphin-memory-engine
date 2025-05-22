@@ -990,11 +990,14 @@ void MemWatchModel::expandStructNode(MemWatchTreeNode* node)
 
 void MemWatchModel::expandArrayNode(MemWatchTreeNode* node)
 {
+  MemWatchEntry* entry = node->getEntry();
+  u32 addr = entry->getActualAddress();
+  std::vector<MemWatchTreeNode*> childNodes{};
   for (int i = 0; i < node->getEntry()->getCollectionCount(); i++)
   {
     MemWatchEntry* childEntry = new MemWatchEntry(node->getEntry()->getContainerEntry());
     MemWatchTreeNode* child = new MemWatchTreeNode(childEntry, node);
-    node->appendChild(child);
+    childNodes.push_back(child);
 
     if (child->getEntry()->getType() == Common::MemType::type_struct)
       setupStructNode(child);
