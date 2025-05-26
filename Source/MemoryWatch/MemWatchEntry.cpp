@@ -203,12 +203,12 @@ void MemWatchEntry::setContainerEntry(MemWatchEntry* elementEntry)
   m_collectionEntry = elementEntry;
 }
 
-u32 MemWatchEntry::getCollectionCount()
+size_t MemWatchEntry::getContainerCount() const
 {
   return m_collectionCount;
 }
 
-void MemWatchEntry::setCollectionCount(u32 size)
+void MemWatchEntry::setContainerCount(size_t size)
 {
   m_collectionCount = size;
 }
