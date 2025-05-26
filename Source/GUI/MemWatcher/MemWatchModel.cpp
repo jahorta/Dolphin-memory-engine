@@ -992,13 +992,8 @@ void MemWatchModel::expandArrayNode(MemWatchTreeNode* node)
     MemWatchEntry* childEntry = new MemWatchEntry(node->getEntry()->getContainerEntry());
     MemWatchTreeNode* child = new MemWatchTreeNode(childEntry, node);
     childNodes.push_back(child);
-
-    if (child->getEntry()->getType() == Common::MemType::type_struct)
-      setupStructNode(child);
-    else if (child->getEntry()->getType() == Common::MemType::type_array)
-      setupArrayNode(child);
   }
-
+  addNodes(childNodes, getIndexFromTreeNode(node), true);
   updateArrayAddresses(node);
 }
 
