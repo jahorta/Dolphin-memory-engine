@@ -415,6 +415,10 @@ QVariant MemWatchModel::data(const QModelIndex& index, int role) const
           else
             return QString("%1 definition loaded").arg(entry->getStructName());
         }
+        else if (entry->getType() == Common::MemType::type_array)
+        {
+          return QString("%1 entries in array.").arg(entry->getContainerCount());
+        }
         break;
       }
       default:
