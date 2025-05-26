@@ -1073,22 +1073,22 @@ void MemWatchModel::updateStructAddresses(MemWatchTreeNode* node)
 
   if (def->getFields().count() != node->getChildren().count())
   {
-      updateStructNode(node);
-      return;
+    updateStructNode(node);
+    return;
   }
 
-      u32 addr = node->getEntry()->getActualAddress();
-      node->getEntry()->updateActualAddress(addr);
-      QVector<FieldDef*> fields = def->getFields();
-      QVector<MemWatchTreeNode*> children = node->getChildren();
+  u32 addr = node->getEntry()->getActualAddress();
+  node->getEntry()->updateActualAddress(addr);
+  QVector<FieldDef*> fields = def->getFields();
+  QVector<MemWatchTreeNode*> children = node->getChildren();
 
-      for (int i = 0; i < def->getFields().count(); ++i)
-      {
-        children[i]->getEntry()->setConsoleAddress(addr + fields[i]->getOffset());
-        if (GUICommon::isContainerType(children[i]->getEntry()->getType()))
-          updateContainerAddresses(children[i]);
-      }
-    }
+  for (int i = 0; i < def->getFields().count(); ++i)
+  {
+    children[i]->getEntry()->setConsoleAddress(addr + fields[i]->getOffset());
+    if (GUICommon::isContainerType(children[i]->getEntry()->getType()))
+      updateContainerAddresses(children[i]);
+  }
+}
 
 void MemWatchModel::updateArrayAddresses(MemWatchTreeNode* node)
 {
@@ -1132,5 +1132,5 @@ void MemWatchModel::setupContainersRecursive(MemWatchTreeNode* node)
 void MemWatchModel::setupArrayNode(MemWatchTreeNode* node)
 {
   addNodes({new MemWatchTreeNode(new MemWatchEntry(m_placeholderEntry))},
-            getIndexFromTreeNode(node), true);
+           getIndexFromTreeNode(node), true);
 }

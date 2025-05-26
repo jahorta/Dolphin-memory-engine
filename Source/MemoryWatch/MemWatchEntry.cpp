@@ -40,7 +40,7 @@ MemWatchEntry::MemWatchEntry(MemWatchEntry* entry)
       m_base(entry->m_base), m_isUnsigned(entry->m_isUnsigned),
       m_boundToPointer(entry->m_boundToPointer), m_pointerOffsets(entry->m_pointerOffsets),
       m_isValidPointer(entry->m_isValidPointer), m_length(entry->m_length),
-      m_structName(entry->m_structName), m_curActualAddress(entry->m_curActualAddress), 
+      m_structName(entry->m_structName), m_curActualAddress(entry->m_curActualAddress),
       m_collectionCount(m_collectionCount)
 {
   m_memory = new char[getSizeForType(entry->getType(), entry->getLength())];
