@@ -461,6 +461,10 @@ void DlgAddWatchEntry::accept()
       m_entry->setStructName(m_structNames[m_structSelect->currentIndex()]);
     else
       m_entry->setStructName(QString());
+    if (m_entry->getType() == Common::MemType::type_array)
+      m_entry->setContainerCount(m_spnContainerSize->value());
+    else
+      m_entry->setContainerCount(1);
     setResult(QDialog::Accepted);
     hide();
   }
