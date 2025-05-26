@@ -89,5 +89,5 @@ private:
   QString m_structName;
   u32 m_curActualAddress;
   MemWatchEntry* m_collectionEntry{};
-  u32 m_collectionCount = 0;
+  size_t m_collectionCount = 1;
 };
