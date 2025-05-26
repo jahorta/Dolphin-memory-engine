@@ -987,7 +987,7 @@ void MemWatchModel::expandArrayNode(MemWatchTreeNode* node)
   MemWatchEntry* entry = node->getEntry();
   u32 addr = entry->getActualAddress();
   std::vector<MemWatchTreeNode*> childNodes{};
-  for (int i = 0; i < node->getEntry()->getCollectionCount(); i++)
+  for (int i = 0; i < node->getEntry()->getContainerCount(); i++)
   {
     MemWatchEntry* childEntry = new MemWatchEntry(node->getEntry()->getContainerEntry());
     MemWatchTreeNode* child = new MemWatchTreeNode(childEntry, node);
