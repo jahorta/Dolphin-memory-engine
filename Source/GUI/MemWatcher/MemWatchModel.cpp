@@ -1136,5 +1136,5 @@ void MemWatchModel::setupContainersRecursive(MemWatchTreeNode* node)
 void MemWatchModel::setupArrayNode(MemWatchTreeNode* node)
 {
   addNodes({new MemWatchTreeNode(new MemWatchEntry(m_placeholderEntry))},
-            getIndexFromTreeNode(node), true);
+           getIndexFromTreeNode(node), true);
 }

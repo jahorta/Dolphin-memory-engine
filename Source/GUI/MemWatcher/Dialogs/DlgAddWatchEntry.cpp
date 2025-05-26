@@ -119,7 +119,7 @@ void DlgAddWatchEntry::makeLayouts()
   layout_type->addWidget(m_spnLength);
   layout_type->addWidget(m_structSelect);
   layout_type->addWidget(m_spnContainerSize);
-  
+
   QVBoxLayout* super_layout_type = new QVBoxLayout;
   super_layout_type->addLayout(layout_type);
   super_layout_type->addWidget(m_btnSetupContainerEntry);
