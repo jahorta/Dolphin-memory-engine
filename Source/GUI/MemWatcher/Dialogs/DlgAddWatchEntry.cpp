@@ -595,7 +595,7 @@ void DlgAddWatchEntry::onSetupContainerContents()
   MemWatchEntry* curEntry = m_entry->getContainerEntry();
   bool isNewEntry = curEntry == nullptr;
 
-  DlgAddWatchEntry dlg(isNewEntry, curEntry, m_structNames, this, m_isForStructField, m_curArrayDepth + 1);
+  DlgAddWatchEntry dlg(isNewEntry, curEntry, m_structNames, this, true, m_curArrayDepth + 1);
   if (dlg.exec() == QDialog::Accepted)
   {
     m_entry->setContainerEntry(dlg.stealEntry());
