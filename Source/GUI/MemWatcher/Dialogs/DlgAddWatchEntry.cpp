@@ -187,7 +187,7 @@ void DlgAddWatchEntry::fillFields(MemWatchEntry* entry)
 
     m_spnLength->setValue(static_cast<int>(m_entry->getLength()));
     m_cmbTypes->setCurrentIndex(static_cast<int>(m_entry->getType()));
-    m_spnContainerSize->setValue(static_cast<int>(m_entry->getCollectionCount()));
+    m_spnContainerSize->setValue(static_cast<int>(m_entry->getContainerCount()));
     if (m_entry->getType() == Common::MemType::type_string ||
         m_entry->getType() == Common::MemType::type_byteArray)
     {

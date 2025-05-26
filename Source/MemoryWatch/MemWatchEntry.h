@@ -52,8 +52,8 @@ public:
 
   MemWatchEntry* getContainerEntry() const;
   void setContainerEntry(MemWatchEntry* elementEntry);
-  u32 getCollectionCount();
-  void setCollectionCount(u32 size);
+  size_t getContainerCount() const;
+  void setContainerCount(size_t size);
 
   Common::MemOperationReturnCode freeze();
 
