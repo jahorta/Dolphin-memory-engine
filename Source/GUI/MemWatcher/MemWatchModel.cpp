@@ -1008,6 +1008,20 @@ void MemWatchModel::collapseArrayNode(MemWatchTreeNode* node)
     deleteNode(getIndexFromTreeNode(node->getChildren()[0]));
 }
 
+int MemWatchModel::getTotalContainerLength(MemWatchEntry* entry)
+{
+  if (entry->isBoundToPointer())
+    return 4;
+  if (!GUICommon::isContainerType(entry->getType()))
+    return Common::getSizeForType(entry->getType(), entry->getLength());
+  if (entry->getType() == Common::MemType::type_array && entry->getContainerEntry() != nullptr)
+    return entry->getContainerCount() * getTotalContainerLength(entry->getContainerEntry());
+  else if (entry->getType() == Common::MemType::type_struct &&
+           m_structDefMap.contains(entry->getStructName()))
+    return m_structDefMap.find(entry->getStructName()).value()->getLength();
+  return 0;
+}
+
 void MemWatchModel::collapseContainerNode(MemWatchTreeNode* node)
 {
   if (node->getEntry()->getType() == Common::MemType::type_struct)
