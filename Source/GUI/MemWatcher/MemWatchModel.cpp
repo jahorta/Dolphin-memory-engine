@@ -1094,15 +1094,15 @@ void MemWatchModel::updateStructAddresses(MemWatchTreeNode* node)
 
 void MemWatchModel::updateArrayAddresses(MemWatchTreeNode* node)
 {
-  if (!node->getEntry()->hasAddressChanged())
+  if (!node->isExpanded())
     return;
 
   u32 addr = node->getEntry()->getActualAddress();
   node->getEntry()->updateActualAddress(addr);
   QVector<MemWatchTreeNode*> children = node->getChildren();
-  u32 entrySize =
-      Common::getSizeForType(node->getEntry()->getType(), node->getEntry()->getLength());
 
+  MemWatchEntry* containerEntry = node->getEntry()->getContainerEntry();
+  u32 entrySize = getTotalContainerLength(containerEntry);
 
   for (int i = 0; i < children.count(); i++)
   {
