@@ -434,6 +434,11 @@ QVariant MemWatchModel::data(const QModelIndex& index, int role) const
         static const QIcon s_structIcon(":/struct2.svg");
         return s_structIcon;
       }
+      else if (entry->getType() == Common::MemType::type_array)
+      {
+        static const QIcon s_arrayIcon(":/array.svg");
+        return s_arrayIcon;
+      }
     }
   }
   else
