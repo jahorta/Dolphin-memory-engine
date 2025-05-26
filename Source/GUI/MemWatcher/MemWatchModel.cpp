@@ -994,6 +994,9 @@ void MemWatchModel::expandStructNode(MemWatchTreeNode* node)
 
 void MemWatchModel::expandArrayNode(MemWatchTreeNode* node)
 {
+  for (MemWatchTreeNode* child : node->getChildren())
+    deleteNode(getIndexFromTreeNode(child));
+
   MemWatchEntry* entry = node->getEntry();
   u32 addr = entry->getActualAddress();
   std::vector<MemWatchTreeNode*> childNodes{};
