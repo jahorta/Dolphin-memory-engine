@@ -26,7 +26,7 @@ DlgAddWatchEntry::DlgAddWatchEntry(const bool newEntry, MemWatchEntry* const ent
   m_curArrayDepth = arrayDepth;
   QString title = newEntry ? "Add Watch" : "Edit Watch";
   if (arrayDepth > 0)
-    title += " for Container at level " + arrayDepth;
+    title += QString(" for Container at level ") + QString::number(arrayDepth);
   setWindowTitle(title);
   initialiseWidgets();
   makeLayouts();
