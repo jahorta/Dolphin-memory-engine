@@ -1008,6 +1008,9 @@ void MemWatchModel::collapseArrayNode(MemWatchTreeNode* node)
 {
   while (node->hasChildren())
     deleteNode(getIndexFromTreeNode(node->getChildren()[0]));
+
+  addNodes({new MemWatchTreeNode(new MemWatchEntry(m_placeholderEntry))},
+           getIndexFromTreeNode(node), true);
 }
 
 int MemWatchModel::getTotalContainerLength(MemWatchEntry* entry)
