@@ -1064,16 +1064,17 @@ void MemWatchModel::updateStructAddresses(MemWatchTreeNode* node)
     return;
   }
 
+  if (!node->isExpanded())
+    return;
+
   StructDef* def = m_structDefMap[node->getEntry()->getStructName()];
 
   if (def->getFields().count() != node->getChildren().count())
   {
-    if (node->isExpanded())
       updateStructNode(node);
-    else if (!node->getEntry()->hasAddressChanged())
       return;
-    else
-    {
+  }
+
       u32 addr = node->getEntry()->getActualAddress();
       node->getEntry()->updateActualAddress(addr);
       QVector<FieldDef*> fields = def->getFields();
@@ -1086,8 +1087,6 @@ void MemWatchModel::updateStructAddresses(MemWatchTreeNode* node)
           updateContainerAddresses(children[i]);
       }
     }
-  }
-}
 
 void MemWatchModel::updateArrayAddresses(MemWatchTreeNode* node)
 {
