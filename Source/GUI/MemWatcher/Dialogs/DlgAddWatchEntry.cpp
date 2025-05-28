@@ -592,7 +592,7 @@ void DlgAddWatchEntry::onPointerOffsetContextMenuRequested(const QPoint& pos)
 
 void DlgAddWatchEntry::onSetupContainerContents()
 {
-  MemWatchEntry* curEntry = m_entry->getContainerEntry();
+  MemWatchEntry* curEntry = new MemWatchEntry(m_entry->getContainerEntry());
   bool isNewEntry = curEntry == nullptr;
 
   DlgAddWatchEntry dlg(isNewEntry, curEntry, m_structNames, this, true, m_curArrayDepth + 1);
