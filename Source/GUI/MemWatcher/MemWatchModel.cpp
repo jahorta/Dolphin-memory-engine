@@ -857,7 +857,7 @@ void MemWatchModel::addNodeToStructNodeMap(MemWatchTreeNode* node)
     return;
   if (!m_structNodes.contains(name))
     m_structNodes.insert(name, {node});
-  else
+  else if (!m_structNodes[name].contains(node))
     m_structNodes[name].push_back(node);
 }
 
