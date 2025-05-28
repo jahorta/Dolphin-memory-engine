@@ -1142,6 +1142,15 @@ void MemWatchModel::setContainerCount(MemWatchTreeNode* node, size_t count)
 
 void MemWatchModel::setupArrayNode(MemWatchTreeNode* node)
 {
+  if (node->childrenCount() == 0)
+  {
   addNodes({new MemWatchTreeNode(new MemWatchEntry(m_placeholderEntry))},
            getIndexFromTreeNode(node), true);
+    return;
+  }
+  else if (node->isExpanded())
+  {
+    collapseArrayNode(node);
+    expandArrayNode(node);
+  }
 }
