@@ -827,13 +827,22 @@ QModelIndex MemWatchModel::getIndexFromTreeNode(const MemWatchTreeNode* const no
 
 void MemWatchModel::setupStructNode(MemWatchTreeNode* node)
 {
+  bool wasExpanded = node->isExpanded();
+  collapseStructNode(node);
+  removeNodeFromStructNodeMap(node, true);
+
   if (m_structDefMap.contains(node->getEntry()->getStructName()))
   {
     addNodeToStructNodeMap(node);
     if (!m_structDefMap[node->getEntry()->getStructName()]->getFields().isEmpty())
+    {
+      if (wasExpanded)
+        expandStructNode(node);
+      else
       addNodes({new MemWatchTreeNode(new MemWatchEntry(m_placeholderEntry))},
                getIndexFromTreeNode(node), true);
   }
+}
 }
 
 void MemWatchModel::addNodeToStructNodeMap(MemWatchTreeNode* node)
