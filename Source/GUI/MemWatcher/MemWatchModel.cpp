@@ -844,10 +844,10 @@ void MemWatchModel::setupStructNode(MemWatchTreeNode* node)
       if (wasExpanded)
         expandStructNode(node);
       else
-      addNodes({new MemWatchTreeNode(new MemWatchEntry(m_placeholderEntry))},
-               getIndexFromTreeNode(node), true);
+        addNodes({new MemWatchTreeNode(new MemWatchEntry(m_placeholderEntry))},
+                 getIndexFromTreeNode(node), true);
+    }
   }
-}
 }
 
 void MemWatchModel::addNodeToStructNodeMap(MemWatchTreeNode* node)
@@ -882,12 +882,12 @@ void MemWatchModel::removeNodeFromStructNodeMap(MemWatchTreeNode* node, bool all
       else
         names.append(node->getEntry()->getStructName());
 
-        for (QString name : names)
-        {
-
+      for (QString name : names)
+      {
         if (name.isEmpty() || m_structNodes.isEmpty() || !m_structNodes.contains(name) ||
             m_structNodes[name].isEmpty() || !m_structNodes[name].contains(node))
-            continue;
+          continue;
+
         m_structNodes[name].remove(m_structNodes[name].indexOf(node));
         if (m_structNodes[name].isEmpty())
           m_structNodes.remove(name);
@@ -1166,8 +1166,8 @@ void MemWatchModel::setupArrayNode(MemWatchTreeNode* node)
 {
   if (node->childrenCount() == 0)
   {
-  addNodes({new MemWatchTreeNode(new MemWatchEntry(m_placeholderEntry))},
-           getIndexFromTreeNode(node), true);
+    addNodes({new MemWatchTreeNode(new MemWatchEntry(m_placeholderEntry))},
+             getIndexFromTreeNode(node), true);
     return;
   }
   else if (node->isExpanded())
