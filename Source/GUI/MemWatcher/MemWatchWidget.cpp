@@ -476,14 +476,19 @@ void MemWatchWidget::onWatchDoubleClicked(const QModelIndex& index)
     {
       MemWatchEntry* entry = node->getEntry();
       int typeIndex = static_cast<int>(entry->getType());
-      DlgChangeType* dlg =
-          new DlgChangeType(this, typeIndex, entry->getLength(), m_structDefs->getStructNames(),
-                            entry->getStructName());
+      DlgChangeType* dlg = new DlgChangeType(
+          this, typeIndex, entry->getLength(), m_structDefs->getStructNames(),
+          entry->getStructName(), entry->getContainerCount(), entry->getContainerEntry());
       if (dlg->exec() == QDialog::Accepted)
       {
         Common::MemType theType = static_cast<Common::MemType>(dlg->getTypeIndex());
         if (theType == Common::MemType::type_struct && dlg->getStructName() != QString())
           entry->setStructName(dlg->getStructName());
+        if (theType == Common::MemType::type_array)
+        {
+          entry->setContainerCount(dlg->getContainerCount());
+          entry->setContainerEntry(dlg->getContainerEntry());
+        }
 
         m_watchModel->changeType(index, theType, dlg->getLength());
         m_hasUnsavedChanges = true;
