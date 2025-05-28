@@ -107,7 +107,7 @@ private:
   void updateArrayAddresses(MemWatchTreeNode* node);
   void setupStructNode(MemWatchTreeNode* node);
   void addNodeToStructNodeMap(MemWatchTreeNode* node);
-  void removeNodeFromStructNodeMap(MemWatchTreeNode* node);
+  void removeNodeFromStructNodeMap(MemWatchTreeNode* node, bool allEntries = false);
   void expandStructNode(MemWatchTreeNode* node);
   void collapseStructNode(MemWatchTreeNode* node);
   void setupArrayNode(MemWatchTreeNode* node);
