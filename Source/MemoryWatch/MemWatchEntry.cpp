@@ -54,6 +54,7 @@ MemWatchEntry::~MemWatchEntry()
 {
   delete[] m_memory;
   delete[] m_freezeMemory;
+  delete m_collectionEntry;
 }
 
 QString MemWatchEntry::getLabel() const
@@ -203,6 +204,7 @@ MemWatchEntry* MemWatchEntry::getContainerEntry() const
 
 void MemWatchEntry::setContainerEntry(MemWatchEntry* elementEntry)
 {
+  delete m_collectionEntry;
   m_collectionEntry = elementEntry;
 }
 
