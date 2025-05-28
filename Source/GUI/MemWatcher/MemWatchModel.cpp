@@ -1134,6 +1134,12 @@ void MemWatchModel::setupContainersRecursive(MemWatchTreeNode* node)
   }
 }
 
+void MemWatchModel::setContainerCount(MemWatchTreeNode* node, size_t count)
+{
+  node->getEntry()->setContainerCount(count);
+  setupArrayNode(node);
+}
+
 void MemWatchModel::setupArrayNode(MemWatchTreeNode* node)
 {
   addNodes({new MemWatchTreeNode(new MemWatchEntry(m_placeholderEntry))},

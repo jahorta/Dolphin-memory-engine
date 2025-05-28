@@ -86,6 +86,7 @@ public:
   void expandContainerNode(MemWatchTreeNode* node);
   void collapseContainerNode(MemWatchTreeNode* node);
   void setupContainersRecursive(MemWatchTreeNode* node);
+  void setContainerCount(MemWatchTreeNode* node, size_t count);
 
 signals:
   void dataEdited(const QModelIndex& index, const QVariant& value, int role);

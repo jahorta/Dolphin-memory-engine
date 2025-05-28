@@ -504,6 +504,17 @@ void MemWatchWidget::onWatchDoubleClicked(const QModelIndex& index)
         m_hasUnsavedChanges = true;
       }
     }
+
+    if (index.column() == MemWatchModel::WATCH_COL_VALUE &&
+        node->getEntry()->getType() == Common::MemType::type_array)
+    {
+      bool ok{};
+      size_t newCount =
+          QInputDialog::getInt(this, tr("Set Array Count"), tr("Array Count:"),
+                               node->getEntry()->getContainerCount(), 1, 9999, 1, &ok, Qt::Dialog);
+      if (ok)
+        m_watchModel->setContainerCount(node, newCount);
+    }
   }
 }
 
