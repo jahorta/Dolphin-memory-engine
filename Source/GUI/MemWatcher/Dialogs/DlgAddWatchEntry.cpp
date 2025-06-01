@@ -592,8 +592,13 @@ void DlgAddWatchEntry::onPointerOffsetContextMenuRequested(const QPoint& pos)
 
 void DlgAddWatchEntry::onSetupContainerContents()
 {
-  MemWatchEntry* curEntry = new MemWatchEntry(m_entry->getContainerEntry());
-  bool isNewEntry = curEntry == nullptr;
+  bool isNewEntry = true;
+  MemWatchEntry* curEntry = nullptr;
+  if (m_entry->getContainerEntry())
+  {
+    curEntry = new MemWatchEntry(m_entry->getContainerEntry());
+    isNewEntry = false;
+  }
 
   DlgAddWatchEntry dlg(isNewEntry, curEntry, m_structNames, this, true, m_curArrayDepth + 1);
   if (dlg.exec() == QDialog::Accepted)
