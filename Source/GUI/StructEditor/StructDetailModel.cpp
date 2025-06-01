@@ -627,6 +627,25 @@ bool StructDetailModel::updateFieldEntry(MemWatchEntry* entry, const QModelIndex
   return true;
 }
 
+int StructDetailModel::getTotalContainerLength(MemWatchEntry* entry)
+{
+  if (entry->isBoundToPointer())
+    return 4;
+  else if (entry->getType() != Common::MemType::type_array &&
+           entry->getType() != Common::MemType::type_struct)
+    return Common::getSizeForType(entry->getType(), entry->getLength());
+  else if (entry->getType() == Common::MemType::type_array && entry->getContainerEntry() != nullptr)
+    return entry->getContainerCount() *
+           getTotalContainerLength(entry->getContainerEntry());
+  else if (entry->getType() == Common::MemType::type_struct)
+  {
+    int len = 0;
+    emit getStructLength(entry->getStructName(), len);
+    return len;
+  }
+  return 0;
+}
+
 FieldDef* StructDetailModel::getFieldByRow(int row)
 {
   if (row < 0 || row >= m_fields.count())
