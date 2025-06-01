@@ -67,6 +67,7 @@ signals:
   void lengthChanged(u32 newLength);
   void modifyStructReference(QString nodeName, QString target, bool addIt, bool& ok);
   void modifyStructPointerReference(QString nodeName, QString target, bool addIt);
+  void getStructLength(const QString name, int& len);
 
 private:
   QString getFieldDetails(FieldDef* field) const;
