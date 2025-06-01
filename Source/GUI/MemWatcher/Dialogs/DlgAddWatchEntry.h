@@ -64,7 +64,7 @@ private:
   QComboBox* m_structSelect{};
   QVector<QString> m_structNames{};
   bool m_isForStructField;
-  QPushButton* m_btnSetupContainerEntry{};
   QSpinBox* m_spnContainerCount{};
+  QPushButton* m_btnSetupContainerEntry{};
   int m_curArrayDepth = 0;
 };
