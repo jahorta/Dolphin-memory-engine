@@ -396,6 +396,28 @@ QVariant MemWatchModel::data(const QModelIndex& index, int role) const
         if (type == Common::MemType::type_struct && !entry->getStructName().isEmpty())
           return entry->getStructName();
         size_t length = entry->getLength();
+        if (type == Common::MemType::type_array && entry->getContainerEntry() != nullptr)
+        {
+          std::stringstream prefix = {};
+          std::stringstream suffix = {};
+          prefix << GUICommon::getStringFromType(type, length).toStdString() + "<";
+          while (entry->getContainerEntry() != nullptr && entry->getType() == Common::MemType::type_array)
+          {
+            suffix.seekp(0);
+            suffix << ">[" + std::to_string(entry->getContainerCount()) + "]";
+            entry = entry->getContainerEntry();
+            if (entry->getType() == Common::MemType::type_struct)
+              prefix << entry->getStructName().toStdString();
+            else if (entry->getType() == Common::MemType::type_array)
+            {
+              prefix << entry->getStructName().toStdString() + "<";
+            }
+            else
+              prefix << GUICommon::getStringFromType(entry->getType(), entry->getLength()).toStdString();
+          }
+          std::string typeOut = prefix.str() + suffix.str();
+          return QString().fromStdString(typeOut);
+        }
         return GUICommon::getStringFromType(type, length);
       }
       case WATCH_COL_ADDRESS:
