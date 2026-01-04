@@ -46,6 +46,7 @@ private:
   void removePointerOffset();
   void removeAllPointerOffset();
   void onPointerOffsetContextMenuRequested(const QPoint& pos);
+  QString getContainerTypeText(MemWatchEntry* entry);
   void onSetupContainerContents();
 
   MemWatchEntry* m_entry{};
@@ -66,5 +67,8 @@ private:
   bool m_isForStructField;
   QSpinBox* m_spnContainerCount{};
   QPushButton* m_btnSetupContainerEntry{};
+  QLabel* m_lblContainerType{};
   int m_curArrayDepth = 0;
+
+  const QString noContainerSetText = "Container Type Not Set";
 };
