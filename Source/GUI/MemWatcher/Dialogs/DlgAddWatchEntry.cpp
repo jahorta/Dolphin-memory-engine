@@ -425,6 +425,14 @@ void DlgAddWatchEntry::accept()
                                             errorMsg, QMessageBox::Ok, this);
     errorBox->exec();
   }
+  else if (m_entry->getType() == Common::MemType::type_array &&
+           m_entry->getContainerEntry() == nullptr)
+  {
+    QString errorMsg = tr("Must define the array contents");
+    QMessageBox* errorBox = new QMessageBox(QMessageBox::Critical, tr("Invalid Array Type"),
+                                            errorMsg, QMessageBox::Ok, this);
+    errorBox->exec();
+  }
   else
   {
     if (m_isForStructField)
