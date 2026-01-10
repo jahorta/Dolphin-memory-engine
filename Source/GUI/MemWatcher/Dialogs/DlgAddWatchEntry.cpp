@@ -625,7 +625,8 @@ QString DlgAddWatchEntry::getContainerTypeText(MemWatchEntry* entry)
   if (entry->getContainerEntry() == nullptr)
     return noContainerSetText;
 
-  return GUICommon::getStringFromType(entry->getType()) + "<" + getContainerTypeText(entry->getContainerEntry()) + ">";
+  return GUICommon::getStringFromType(entry->getType()) + "<" +
+         getContainerTypeText(entry->getContainerEntry()) + ">";
 }
 
 void DlgAddWatchEntry::onSetupContainerContents()

@@ -401,7 +401,8 @@ QVariant MemWatchModel::data(const QModelIndex& index, int role) const
           std::stringstream prefix = {};
           std::stringstream suffix = {};
           prefix << GUICommon::getStringFromType(type, length).toStdString() + "<";
-          while (entry->getContainerEntry() != nullptr && entry->getType() == Common::MemType::type_array)
+          while (entry->getContainerEntry() != nullptr &&
+                 entry->getType() == Common::MemType::type_array)
           {
             suffix.seekp(0);
             suffix << ">[" + std::to_string(entry->getContainerCount()) + "]";
@@ -413,7 +414,8 @@ QVariant MemWatchModel::data(const QModelIndex& index, int role) const
               prefix << entry->getStructName().toStdString() + "<";
             }
             else
-              prefix << GUICommon::getStringFromType(entry->getType(), entry->getLength()).toStdString();
+              prefix << GUICommon::getStringFromType(entry->getType(), entry->getLength())
+                            .toStdString();
           }
           std::string typeOut = prefix.str() + suffix.str();
           return QString().fromStdString(typeOut);
