@@ -64,12 +64,18 @@ private:
   {
     int x = 0;
     int y = 0;
+    int carrotIndex = 0;
     bool isInViewer = false;
   };
 
   void initialise();
 
   void updateFontSize();
+  void setMemType(Common::MemType type);
+  void setBase(Common::MemBase base);
+  void setSigned(bool isUnsigned);
+  void setBranchType(bool absoluteBranch);
+  void updateDigitsPerBox();
   bytePosFromMouse mousePosToBytePos(QPoint pos);
   void scrollToSelection();
   void copySelection(Common::MemType type) const;
@@ -91,6 +97,8 @@ private:
   void renderCarret(QPainter& painter, int rowIndex, int columnIndex);
   void determineMemoryTextRenderProperties(int rowIndex, int columnIndex, bool& drawCarret,
                                            QColor& bgColor, QColor& fgColor);
+  std::string memToStrFormatted(const int rowIndex, const int columnIndex) const;
+  QString getEditAllText() const;
 
   const int m_numRows = 16;
   const int m_numColumns = 16;  // Should be a multiple of 16, or the header doesn't make much sense
@@ -102,6 +110,7 @@ private:
   int m_EndBytesSelectionPosY = 0;
   SelectionType m_selectionType = SelectionType::single;
   int m_charWidthEm = 0;
+  int m_digitsPerBox = 2;
   int m_charHeight = 0;
   int m_hexAreaWidth = 0;
   int m_hexAreaHeight = 0;
@@ -112,7 +121,7 @@ private:
   char* m_lastRawMemoryData = nullptr;
   int* m_memoryMsElapsedLastChange = nullptr;
   bool m_editingHex = false;
-  bool m_carretBetweenHex = false;
+  int m_carrotIndex = 0;
   bool m_disableScrollContentEvent = false;
   bool m_validMemory = false;
   u32 m_currentFirstAddress = 0;
@@ -121,6 +130,13 @@ private:
   QRect* m_curosrRect{};
   QShortcut* m_copyShortcut{};
   QElapsedTimer m_elapsedTimer;
+
+  // variables for how memory is shown to user
+  Common::MemType m_type = Common::MemType::type_byte;
+  int m_sizeOfType = 1;
+  Common::MemBase m_base = Common::MemBase::base_hexadecimal;
+  bool m_isUnsigned = false;
+  bool m_absoluteBranch = true;  // true = absolute, false = relative
 
   StructTreeNode* m_structDefs;
 };
