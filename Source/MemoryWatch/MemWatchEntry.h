@@ -53,6 +53,11 @@ public:
   QString getStructName() const;
   void setStructName(QString structName);
 
+  MemWatchEntry* getContainerEntry() const;
+  void setContainerEntry(MemWatchEntry* elementEntry);
+  size_t getContainerCount() const;
+  void setContainerCount(size_t size);
+
   Common::MemOperationReturnCode freeze();
 
   u32 getAddressForPointerLevel(int level) const;
@@ -87,4 +92,6 @@ private:
   size_t m_length = 1;
   QString m_structName;
   u32 m_curActualAddress;
+  MemWatchEntry* m_containerEntry{};
+  size_t m_collectionCount = 1;
 };
