@@ -52,7 +52,6 @@ void MemViewerWidget::makeLayouts()
   main_layout->addLayout(controls_layout);
   main_layout->addWidget(m_memViewer);
   setLayout(main_layout);
-  layout()->setSizeConstraint(QLayout::SetFixedSize);
 }
 
 QTimer* MemViewerWidget::getUpdateTimer() const

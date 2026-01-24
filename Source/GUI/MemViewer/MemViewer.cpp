@@ -63,10 +63,73 @@ void MemViewer::initialise()
   std::memcpy(m_lastRawMemoryData, m_updatedRawMemoryData, m_numCells);
 }
 
+void MemViewer::calculateRowsAndCols()
+{
+  int size_per_hex_area = (m_charWidthEm * m_digitsPerBox + m_charWidthEm / 2);
+
+  int total_width = viewport()->width();
+  int relevant_width = total_width - m_rowHeaderWidth - verticalScrollBar()->width() -
+                       (12 * m_charWidthEm) + (m_charWidthEm / 2) + (m_charWidthEm / 4);
+  int numCols = relevant_width / size_per_hex_area * (m_sizeOfType);
+  if (m_sizeOfType != 8 && numCols > 12)
+  {
+    // "Text (ASCII)" takes up 12 characters. Ascii area isn't taken into account until the 13th
+    // byte
+    relevant_width = relevant_width - (12 / m_sizeOfType) * size_per_hex_area;
+    numCols = 12 + ((relevant_width / ((size_per_hex_area) + (m_charWidthEm * m_sizeOfType))) *
+                    m_sizeOfType);
+  }
+  else if (m_sizeOfType == 8 && numCols >= 16)
+  {
+    // doubleword and Double handler
+    relevant_width = relevant_width - (2 * size_per_hex_area) - (4 * m_charWidthEm);
+    if (relevant_width > 0)
+      numCols = 16 + ((relevant_width / ((size_per_hex_area) + (m_charWidthEm * m_sizeOfType))) *
+                      m_sizeOfType);
+    else
+      numCols = 8;
+  }
+  numCols = numCols - (numCols % m_sizeOfType);
+
+  int total_height = viewport()->height();
+  int relevant_height = total_height - m_columnHeaderHeight - (m_charHeight / 2);
+  int numRows = (relevant_height / m_charHeight) + 1;
+
+  if (m_numRows != numRows || m_numColumns != numCols)
+  {
+    m_numRows = std::max(1, numRows);
+    m_numColumns = std::max(m_sizeOfType, numCols);
+    m_numCells = m_numRows * m_numColumns;
+
+    delete[] m_updatedRawMemoryData;
+    delete[] m_lastRawMemoryData;
+    delete[] m_memoryMsElapsedLastChange;
+    m_updatedRawMemoryData = new char[m_numCells];
+    m_lastRawMemoryData = new char[m_numCells];
+    m_memoryMsElapsedLastChange = new int[m_numCells];
+
+    updateFontSize();
+    updateGeometry();
+    std::fill(m_memoryMsElapsedLastChange, m_memoryMsElapsedLastChange + m_numCells, 0);
+    updateViewer();
+    std::memcpy(m_lastRawMemoryData, m_updatedRawMemoryData, m_numCells);
+    jumpToAddress(m_currentFirstAddress);  // ensure you can't see addresses outside of normal range
+    memoryValidityChanged(m_validMemory);  // ensure scrollbar is accurate
+    verticalScrollBar()->setPageStep(m_numRows);
+  }
+}
+
 QSize MemViewer::sizeHint() const
 {
-  return {m_rowHeaderWidth + m_hexAreaWidth + 17 * m_charWidthEm + verticalScrollBar()->width(),
+  return {m_rowHeaderWidth + m_hexAreaWidth + (1 + std::max(12, m_numColumns)) * m_charWidthEm +
+              verticalScrollBar()->width(),
           m_columnHeaderHeight + m_hexAreaHeight + m_charHeight / 2};
+}
+QSize MemViewer::minimumSizeHint() const
+{
+  return {m_rowHeaderWidth + (m_charWidthEm * m_digitsPerBox + m_charWidthEm / 2) +
+              (13 * m_charWidthEm) + verticalScrollBar()->width(),
+          m_columnHeaderHeight + m_charHeight + m_charHeight / 2};
 }
 
 void MemViewer::memoryValidityChanged(const bool valid)
@@ -483,7 +546,8 @@ void MemViewer::wheelEvent(QWheelEvent* event)
       m_memoryFontSize += 1;
     }
     updateFontSize();
-
+    calculateRowsAndCols();
+    updateGeometry();
     viewport()->update();
   }
   else
@@ -628,6 +692,7 @@ void MemViewer::updateDigitsPerBox()
   }
   m_carrotIndex = 0;
   updateFontSize();
+  calculateRowsAndCols();
   updateGeometry();
   viewport()->update();
 }
@@ -1219,7 +1284,8 @@ void MemViewer::renderSeparatorLines(QPainter& painter) const
                    m_columnHeaderHeight + m_hexAreaHeight);
   painter.drawLine(m_rowHeaderWidth - m_charWidthEm / 2, 0, m_rowHeaderWidth - m_charWidthEm / 2,
                    m_columnHeaderHeight + m_hexAreaHeight);
-  painter.drawLine(0, m_columnHeaderHeight, m_hexAsciiSeparatorPosX + 17 * m_charWidthEm,
+  painter.drawLine(0, m_columnHeaderHeight,
+                   m_hexAsciiSeparatorPosX + (std::max(m_numColumns, 13))*m_charWidthEm,
                    m_columnHeaderHeight);
 
   int divide_amt = std::max(SConfig::getInstance().getViewerNbrBytesSeparator(), m_sizeOfType);
@@ -1227,7 +1293,7 @@ void MemViewer::renderSeparatorLines(QPainter& painter) const
   if (SConfig::getInstance().getViewerNbrBytesSeparator() != 0)
   {
     int bytesSeparatorXPos = m_rowHeaderWidth - m_charWidthEm / 2 + m_charWidthEm / 4;
-    for (int i = 0; i < m_numColumns / divide_amt - 1; i++)
+    for (int i = 0; i < m_numColumns / divide_amt - 1 + (m_numColumns % divide_amt != 0); i++)
     {
       bytesSeparatorXPos += (m_charWidthEm * m_digitsPerBox) * (divide_amt / m_sizeOfType) +
                             (m_charWidthEm / 2) * (divide_amt / m_sizeOfType);
@@ -1255,8 +1321,9 @@ void MemViewer::renderColumnsHeaderText(QPainter& painter) const
     posXHeaderText += m_charWidthEm * m_digitsPerBox + m_charWidthEm / 2;
   }
 
+  double amtBuffer = std::max(0.5, (m_numColumns - 12.0) / 2.0 + 0.5);
   painter.drawText(m_hexAsciiSeparatorPosX +
-                       static_cast<int>(static_cast<double>(m_charWidthEm) * 2.5),
+                       static_cast<int>(static_cast<double>(m_charWidthEm) * amtBuffer),
                    m_charHeight, tr("Text (ASCII)"));
   painter.drawText(0, 0, 0, 0, 0, QString());
   painter.setPen(oldPenColor);
@@ -1492,4 +1559,10 @@ void MemViewer::paintEvent(QPaintEvent* event)
     for (int j = 0; j < m_numColumns; ++j)
       renderMemory(painter, i, j);
   }
+}
+
+void MemViewer::resizeEvent(QResizeEvent* event)
+{
+  QWidget::resizeEvent(event);
+  calculateRowsAndCols();
 }

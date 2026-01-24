@@ -28,6 +28,8 @@ public:
   MemViewer& operator=(MemViewer&&) = delete;
 
   QSize sizeHint() const override;
+  QSize minimumSizeHint() const override;
+  void calculateRowsAndCols();
   void mousePressEvent(QMouseEvent* event) override;
   void mouseMoveEvent(QMouseEvent* event) override;
   void contextMenuEvent(QContextMenuEvent* event) override;
@@ -44,6 +46,9 @@ public:
 signals:
   void memErrorOccured();
   void addWatch(MemWatchEntry* entry);
+
+protected:
+  void resizeEvent(QResizeEvent* event) override;
 
 private:
   enum class SelectionType
@@ -100,9 +105,9 @@ private:
   std::string memToStrFormatted(const int rowIndex, const int columnIndex) const;
   QString getEditAllText() const;
 
-  const int m_numRows = 16;
-  const int m_numColumns = 16;  // Should be a multiple of 16, or the header doesn't make much sense
-  const int m_numCells = m_numRows * m_numColumns;
+  int m_numRows = 16;
+  int m_numColumns = 16;  // Should be a multiple of 16, or the header doesn't make much sense
+  int m_numCells = m_numRows * m_numColumns;
   int m_memoryFontSize = -1;
   int m_StartBytesSelectionPosX = 0;
   int m_StartBytesSelectionPosY = 0;
