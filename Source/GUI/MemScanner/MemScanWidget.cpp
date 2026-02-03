@@ -635,6 +635,14 @@ void MemScanWidget::setShowThreshold(const size_t showThreshold)
   }
 }
 
+void MemScanWidget::onGoToAddressInViewer(const QModelIndex& index)
+{
+  if (index != QVariant())
+  {
+    emit goToAddressInViewer(m_resultsListModel->getResultAddress(index.row()));
+  }
+}
+
 void MemScanWidget::onResultListDoubleClicked(const QModelIndex& index)
 {
   if (index != QVariant())
@@ -663,6 +671,10 @@ void MemScanWidget::onResultsListContextMenuRequested(const QPoint& pos)
     const QModelIndex addressIndex{index.siblingAtColumn(ResultsListModel::RESULT_COL_ADDRESS)};
     QApplication::clipboard()->setText(addressIndex.data(Qt::DisplayRole).toString());
   });
+
+  QAction* const goToAddrViewerAction{menu.addAction(tr("&Goto Address in Memory Viewer"))};
+  connect(goToAddrViewerAction, &QAction::triggered,
+          [this, index] { onGoToAddressInViewer(index); });
 
   menu.exec(m_tblResulstList->viewport()->mapToGlobal(pos));
 }

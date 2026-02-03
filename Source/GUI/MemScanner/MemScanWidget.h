@@ -48,6 +48,7 @@ public:
   void onAddAll();
   QTimer* getUpdateTimer() const;
   void setShowThreshold(size_t showThreshold);
+  void onGoToAddressInViewer(const QModelIndex& index);
 
 signals:
   void requestAddWatchEntry(u32 address, Common::MemType type, size_t length, bool isUnsigned,
@@ -57,6 +58,7 @@ signals:
   void requestAddAllResultsToWatchList(Common::MemType type, size_t length, bool isUnsigned,
                                        Common::MemBase base, bool isBranchAbsolute);
   void mustUnhook();
+  void goToAddressInViewer(u32 address);
 
 private:
   void initialiseWidgets();

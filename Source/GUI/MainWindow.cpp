@@ -253,6 +253,8 @@ void MainWindow::makeMemViewer()
   connect(m_viewer, &MemViewerWidget::addWatchRequested, m_watcher, &MemWatchWidget::addWatchEntry);
   connect(m_watcher, &MemWatchWidget::goToAddressInViewer, this,
           &MainWindow::onOpenMemViewerWithAddress);
+  connect(m_scanner, &MemScanWidget::goToAddressInViewer, this,
+          &MainWindow::onOpenMemViewerWithAddress);
 }
 
 void MainWindow::addSelectedResultsToWatchList(Common::MemType type, size_t length, bool isUnsigned,
